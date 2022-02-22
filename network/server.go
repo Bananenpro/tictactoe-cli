@@ -8,6 +8,10 @@ import (
 	"strings"
 )
 
+var (
+	ErrDisconnected = errors.New("disconnected")
+)
+
 type ServerConnection struct {
 	con net.Conn
 }
@@ -23,31 +27,45 @@ func Connect(address string) (*ServerConnection, error) {
 	}, nil
 }
 
-// waits for 'match-found' message from server and returns the assigned sign ('x'/'o')
-func (c *ServerConnection) WaitForMatch() (string, error) {
+type ReadCallback func(con *ServerConnection, text string)
+
+func (c *ServerConnection) Read(callback ReadCallback) {
 	scanner := bufio.NewScanner(c.con)
 	for scanner.Scan() {
-		text := strings.ToLower(scanner.Text())
-		if strings.HasPrefix(text, "match-found:") {
-			parts := strings.Split(text, ":")
-			if len(parts) == 2 {
-				sign := parts[1]
-				if sign != "x" && sign != "o" {
-					fmt.Println("Invalid sign:", sign)
-				} else {
-					return sign, nil
-				}
-			}
-		} else {
-			fmt.Println("Unexpected message from server:", text)
-		}
+		callback(c, strings.ToLower(scanner.Text()))
+	}
+	if scanner.Err() != nil {
+		callback(c, "error: "+scanner.Err().Error())
+	} else {
+		callback(c, "disconnect")
+	}
+}
+
+func (c *ServerConnection) ReadLine() (string, error) {
+	scanner := bufio.NewScanner(c.con)
+	if scanner.Scan() {
+		fmt.Println(scanner.Text())
+		return strings.ToLower(scanner.Text()), nil
 	}
 	if scanner.Err() != nil {
 		return "", scanner.Err()
 	}
-	return "", errors.New("disconnected")
+	return "", ErrDisconnected
+}
+
+func (c *ServerConnection) ClickField(fieldIndex int) error {
+	return c.Send(fmt.Sprintf("click:%d", fieldIndex))
 }
 
 func (c *ServerConnection) Close() error {
 	return c.con.Close()
+}
+
+func (c *ServerConnection) Send(text string) error {
+	_, err := fmt.Fprintf(c.con, text+"\n")
+	if err != nil {
+		fmt.Printf("Failed to send '%s': '%s'\n", text, err)
+		return err
+	}
+	return nil
 }
