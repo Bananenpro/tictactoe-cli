@@ -10,9 +10,13 @@ import (
 type cellState int
 
 const (
-	cellEmpty  cellState = 0
-	cellCross  cellState = 1
-	cellCircle cellState = 2
+	cellEmpty      cellState = 0
+	cellCross      cellState = 1
+	cellCircle     cellState = 2
+	cellCrossWin   cellState = 3
+	cellCircleWin  cellState = 4
+	cellCrossLose  cellState = 5
+	cellCircleLose cellState = 6
 )
 
 func (s cellState) String() string {
@@ -23,6 +27,14 @@ func (s cellState) String() string {
 		return "X"
 	case cellCircle:
 		return "O"
+	case cellCrossWin:
+		return "\033[0;32mX\033[0m"
+	case cellCircleWin:
+		return "\033[0;32mO\033[0m"
+	case cellCrossLose:
+		return "\033[0;31mX\033[0m"
+	case cellCircleLose:
+		return "\033[0;31mO\033[0m"
 	default:
 		return "?"
 	}
@@ -83,9 +95,41 @@ func (g *Game) HandleCommand(cmd string) {
 		PrintBoard(g.board)
 	} else if cmd == "opponent-disconnected" {
 		// TODO: stop game
-	} else if cmd == "winner" {
-		// TODO: display winner message and ask if player wants to repeat
-	} else if cmd == "loser" {
-		// TODO: display winner message and ask if player wants to repeat
+	} else if strings.HasPrefix(cmd, "winner:") || strings.HasPrefix(cmd, "loser:") {
+		parts := strings.Split(cmd, ":")
+		if len(parts) != 2 {
+			fmt.Println("Invalid command:", cmd)
+			return
+		}
+
+		winner := strings.HasPrefix(cmd, "winner:")
+
+		ClearTerminal()
+		for _, r := range parts[1] {
+			index := int(r - '0')
+			if index < 0 || index > 8 {
+				fmt.Println("Error: invalid cell index:", index)
+			} else {
+				if winner {
+					if g.board[index] == cellCross {
+						g.board[index] = cellCrossWin
+					} else {
+						g.board[index] = cellCircleWin
+					}
+				} else {
+					if g.board[index] == cellCross {
+						g.board[index] = cellCrossLose
+					} else {
+						g.board[index] = cellCircleLose
+					}
+				}
+			}
+		}
+		PrintBoard(g.board)
+		if winner {
+			fmt.Println("You win!")
+		} else {
+			fmt.Println("You lose!")
+		}
 	}
 }
