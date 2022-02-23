@@ -17,6 +17,8 @@ const (
 	cellCircleWin  cellState = 4
 	cellCrossLose  cellState = 5
 	cellCircleLose cellState = 6
+	cellCrossTie   cellState = 7
+	cellCircleTie  cellState = 8
 )
 
 func (s cellState) String() string {
@@ -35,6 +37,10 @@ func (s cellState) String() string {
 		return "\033[0;31mX\033[0m"
 	case cellCircleLose:
 		return "\033[0;31mO\033[0m"
+	case cellCrossTie:
+		return "\033[0;34mX\033[0m"
+	case cellCircleTie:
+		return "\033[0;34mO\033[0m"
 	default:
 		return "?"
 	}
@@ -144,5 +150,16 @@ func (g *Game) HandleCommand(cmd string) {
 		} else {
 			fmt.Println("You lose!")
 		}
+	} else if cmd == "tie" {
+		ClearTerminal()
+		for i, c := range g.board {
+			if c == cellCross {
+				g.board[i] = cellCrossTie
+			} else {
+				g.board[i] = cellCircleTie
+			}
+		}
+		PrintBoard(g.board)
+		fmt.Println("Tie!")
 	}
 }
