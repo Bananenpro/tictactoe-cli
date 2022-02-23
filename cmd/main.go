@@ -60,7 +60,7 @@ func StartGame(con *network.ServerConnection, sign string) {
 }
 
 func main() {
-	con, err := network.Connect("127.0.0.1:7531")
+	con, err := network.Connect("julianh.de:7531")
 	if err != nil {
 		fmt.Println("Failed to connect to server: ", err)
 		return
