@@ -10,6 +10,31 @@ A simple cli frontend for my [TicTacToe multiplayer server](https://github.com/B
 - Implements all features of the server
 - Colorful winning row
 
+## Setup
+
+### Prerequisites
+
+- [Go](https://go.dev/) 1.17+
+
+### Cloning the repo
+
+```sh
+git clone https://github.com/Bananenpro/tictactoe-cli.git
+cd tictactoe-cli
+```
+
+### Building
+
+```sh
+go build -o tictactoe-cli ./cmd/main.go
+```
+
+### Running
+
+```sh
+./tictactoe-cli
+```
+
 ## License
 
 This program is free software: you can redistribute it and/or modify
