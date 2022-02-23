@@ -70,6 +70,8 @@ func (g *Game) Start() {
 func (g *Game) HandleCommand(cmd string) {
 	if cmd == "your-turn" {
 		g.serverConnection.ClickField(g.InputFieldIndex())
+	} else if cmd == "their-turn" {
+		fmt.Println("Waiting for opponent...")
 	} else if strings.HasPrefix(cmd, "board:") {
 		parts := strings.Split(cmd, ":")
 		if len(parts) != 2 {
