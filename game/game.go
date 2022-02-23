@@ -77,6 +77,16 @@ func New(serverConnection *network.ServerConnection) *Game {
 func (g *Game) Start() {
 	ClearTerminal()
 	PrintBoard(g.board)
+	g.running = true
+}
+
+func (g *Game) Stop() {
+	g.running = false
+	g.serverConnection.Close()
+}
+
+func (g *Game) IsRunning() bool {
+	return g.running
 }
 
 func (g *Game) HandleCommand(cmd string) {
@@ -94,7 +104,10 @@ func (g *Game) HandleCommand(cmd string) {
 		ClearTerminal()
 		PrintBoard(g.board)
 	} else if cmd == "opponent-disconnected" {
-		// TODO: stop game
+		ClearTerminal()
+		PrintBoard(g.board)
+		fmt.Println("Your opponent disconnected!")
+		g.Stop()
 	} else if strings.HasPrefix(cmd, "winner:") || strings.HasPrefix(cmd, "loser:") {
 		parts := strings.Split(cmd, ":")
 		if len(parts) != 2 {

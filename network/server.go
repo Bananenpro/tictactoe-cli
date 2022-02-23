@@ -34,7 +34,7 @@ func (c *ServerConnection) Read(callback ReadCallback) {
 	for scanner.Scan() {
 		callback(c, strings.ToLower(scanner.Text()))
 	}
-	if scanner.Err() != nil {
+	if scanner.Err() != nil && !errors.Is(scanner.Err(), net.ErrClosed) {
 		callback(c, "error: "+scanner.Err().Error())
 	} else {
 		callback(c, "disconnect")

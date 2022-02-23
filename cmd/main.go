@@ -20,8 +20,9 @@ func handleCommand(con *network.ServerConnection, command string) {
 	}
 
 	if command == "disconnect" {
-		fmt.Println("The server closed the connection.")
-		os.Exit(1)
+		if tictactoe.IsRunning() {
+			fmt.Println("The server closed the connection.")
+		}
 		return
 	}
 
