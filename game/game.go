@@ -146,9 +146,9 @@ func (g *Game) HandleCommand(cmd string) {
 		}
 		PrintBoard(g.board)
 		if winner {
-			fmt.Println("You win!")
+			fmt.Println("\033[1;32mYou win!\033[0m")
 		} else {
-			fmt.Println("You lose!")
+			fmt.Println("\033[1;31mYou lose!\033[0m")
 		}
 		g.askAgain()
 	} else if cmd == "tie" {
@@ -161,7 +161,7 @@ func (g *Game) HandleCommand(cmd string) {
 			}
 		}
 		PrintBoard(g.board)
-		fmt.Println("Tie!")
+		fmt.Println("\033[1;34mTie!\033[0m")
 		g.askAgain()
 	}
 }
