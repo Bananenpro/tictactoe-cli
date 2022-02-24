@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func ClearTerminal() {
@@ -31,4 +32,24 @@ func (g *Game) InputFieldIndex() int {
 	}
 
 	return index
+}
+
+func AskYesNo(question string) bool {
+	scanner := bufio.NewScanner(os.Stdin)
+	for {
+		fmt.Print(question, " [y/n]: ")
+		if scanner.Scan() {
+			text := strings.ToLower(scanner.Text())
+			if text == "y" || text == "yes" {
+				return true
+			}
+			if text == "n" || text == "no" {
+				return false
+			}
+		} else {
+			break
+		}
+	}
+
+	return false
 }

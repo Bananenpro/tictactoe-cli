@@ -150,6 +150,7 @@ func (g *Game) HandleCommand(cmd string) {
 		} else {
 			fmt.Println("You lose!")
 		}
+		g.askAgain()
 	} else if cmd == "tie" {
 		ClearTerminal()
 		for i, c := range g.board {
@@ -161,5 +162,16 @@ func (g *Game) HandleCommand(cmd string) {
 		}
 		PrintBoard(g.board)
 		fmt.Println("Tie!")
+		g.askAgain()
+	}
+}
+
+func (g *Game) askAgain() {
+	fmt.Println()
+	if AskYesNo("Would you like to play again?") {
+		g.serverConnection.Send("again")
+		fmt.Println("Waiting for decision of opponent...")
+	} else {
+		g.serverConnection.Close()
 	}
 }
