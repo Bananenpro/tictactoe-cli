@@ -15,6 +15,7 @@ A simple cli frontend for my [TicTacToe multiplayer server](https://github.com/B
 ### Prerequisites
 
 - [Go](https://go.dev/) 1.17+
+- A terminal emulator that supports ANSI escape sequences
 
 ### Cloning the repo
 
