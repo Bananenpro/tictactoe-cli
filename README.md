@@ -9,6 +9,7 @@ A simple cli frontend for my [TicTacToe multiplayer server](https://github.com/B
 
 - Implements all features of the server
 - Colorful winning row
+- Optional AI using the [minimax search](https://en.wikipedia.org/wiki/Minimax) algorithm
 
 ## Setup
 
@@ -32,8 +33,16 @@ go build -o tictactoe-cli ./cmd/main.go
 
 ### Running
 
+To play:
+
 ```sh
 ./tictactoe-cli
+```
+
+To let the computer play for you:
+
+```sh
+./tictactoe-cli --ai
 ```
 
 ## License
