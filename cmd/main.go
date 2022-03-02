@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -11,6 +12,7 @@ import (
 )
 
 var tictactoe *game.Game
+var useAI *bool
 
 func handleCommand(con *network.ServerConnection, command string) {
 	if strings.HasPrefix(command, "error:") {
@@ -56,11 +58,15 @@ func StartGame(con *network.ServerConnection, sign string) {
 	fmt.Printf("Match found (sign: %s)!\n", sign)
 	time.Sleep(1 * time.Second)
 
-	tictactoe = game.New(con)
+	tictactoe = game.New(con, sign, *useAI)
+
 	tictactoe.Start()
 }
 
 func main() {
+	useAI = flag.Bool("ai", false, "Let the computer play for you")
+	flag.Parse()
+
 	con, err := network.Connect("julianh.de:7531")
 	if err != nil {
 		fmt.Println("Failed to connect to server: ", err)

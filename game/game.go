@@ -72,11 +72,19 @@ type Game struct {
 	board            board
 	serverConnection *network.ServerConnection
 	running          bool
+	useAI            bool
+	sign             cellState
 }
 
-func New(serverConnection *network.ServerConnection) *Game {
+func New(serverConnection *network.ServerConnection, sign string, useAI bool) *Game {
+	cState := cellCross
+	if sign == "o" {
+		cState = cellCircle
+	}
 	return &Game{
 		serverConnection: serverConnection,
+		useAI:            useAI,
+		sign:             cState,
 	}
 }
 
@@ -97,7 +105,11 @@ func (g *Game) IsRunning() bool {
 
 func (g *Game) HandleCommand(cmd string) {
 	if cmd == "your-turn" {
-		g.serverConnection.ClickField(g.InputFieldIndex())
+		if g.useAI {
+			g.serverConnection.ClickField(g.AIGetNextFieldIndex())
+		} else {
+			g.serverConnection.ClickField(g.InputFieldIndex())
+		}
 	} else if cmd == "their-turn" {
 		fmt.Println("Waiting for opponent...")
 	} else if strings.HasPrefix(cmd, "board:") {
