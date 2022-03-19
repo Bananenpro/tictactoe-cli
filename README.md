@@ -3,7 +3,7 @@
 ![License](https://img.shields.io/github/license/Bananenpro/tictactoe-cli)
 ![Go version](https://img.shields.io/github/go-mod/go-version/Bananenpro/tictactoe-cli)
 
-A simple cli frontend for my [TicTacToe multiplayer server](https://github.com/Bananenpro/tictactoe-backend).
+A CLI frontend for my [TicTacToe multiplayer server](https://github.com/Bananenpro/tictactoe-backend).
 
 ## Features
 
